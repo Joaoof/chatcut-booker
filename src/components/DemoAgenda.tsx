@@ -142,6 +142,7 @@ export function DemoAgenda() {
       }}
       onStatusChange={setStatus}
       onCreate={create}
+      compact
     />
   );
 }

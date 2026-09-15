@@ -54,11 +54,14 @@ export function ServiceIcon({ id, className }: { id: Service["id"]; className?: 
   return <Icon className={className} />;
 }
 
+/*  A plain card on phones (no frame inside a phone); the framed phone from sm up.  */
 export function PhoneFrame({ children }: { children: React.ReactNode }) {
   return (
-    <div className="phone relative overflow-hidden">
-      <div className="absolute top-3 left-1/2 z-10 h-6 w-28 -translate-x-1/2 rounded-full bg-black" />
-      <div className="flex h-[690px] flex-col px-4 pt-12 pb-5">{children}</div>
+    <div className="relative overflow-hidden rounded-3xl border border-line bg-[#0b0b0b] sm:phone">
+      <div className="absolute top-3 left-1/2 z-10 hidden h-6 w-28 -translate-x-1/2 rounded-full bg-black sm:block" />
+      <div className="flex h-[600px] flex-col px-4 pt-5 pb-4 sm:h-[690px] sm:pt-12 sm:pb-5">
+        {children}
+      </div>
     </div>
   );
 }

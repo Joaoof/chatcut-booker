@@ -468,6 +468,14 @@
   scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
 }
 
+/*  Cheaper shadows on small screens; budget phones repaint them on every scroll.  */
+@media (max-width: 640px) {
+  :root {
+    --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.35);
+    --shadow-brand: 0 6px 16px rgba(142, 51, 234, 0.3);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

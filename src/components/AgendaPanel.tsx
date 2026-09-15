@@ -95,6 +95,7 @@ export function AgendaPanel({
   onRefresh,
   onStatusChange,
   onCreate,
+  compact = false,
 }: {
   date: string;
   today: string;
@@ -105,6 +106,8 @@ export function AgendaPanel({
   onRefresh: () => void;
   onStatusChange: (id: string, status: Status) => void;
   onCreate: (booking: NewBooking) => Promise<boolean>;
+  /*  Hides free slots on phones, for the landing demo.  */
+  compact?: boolean;
 }) {
   const [filter, setFilter] = useState<Filter>("todos");
   const [nowMinutes, setNowMinutes] = useState<number | null>(null);
@@ -443,7 +446,12 @@ export function AgendaPanel({
                   className="row-in relative"
                 >
                   {items.length === 0 ? (
-                    <div className="flex items-center gap-3 rounded-2xl border border-dashed border-line px-4 py-2.5">
+                    <div
+                      className={cn(
+                        "flex items-center gap-3 rounded-2xl border border-dashed border-line px-4 py-2.5",
+                        compact && "hidden sm:flex",
+                      )}
+                    >
                       <span className="absolute -left-[15px] size-2 rounded-full border border-line bg-surface" />
                       <span className="w-14 text-xs font-semibold text-slate7/70">{slot}</span>
                       <span className="text-xs text-slate7/60">livre</span>
