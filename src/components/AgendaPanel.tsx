@@ -193,7 +193,7 @@ export function AgendaPanel({
               disabled={closed}
               onClick={() => onDateChange(iso)}
               className={cn(
-                "lift focus-ring rounded-2xl px-2 py-2.5 text-center transition-colors",
+                "lift focus-ring rounded-2xl px-1 py-2 text-center transition-colors sm:px-2 sm:py-2.5",
                 selected ? "picked" : "glass2",
                 closed && "cursor-not-allowed opacity-40 hover:translate-y-0",
               )}
@@ -289,11 +289,9 @@ export function AgendaPanel({
             <p className="count-in mt-1 text-2xl font-medium text-ink">—</p>
           ) : next ? (
             <>
-              <p className="count-in mt-1 truncate text-2xl font-medium text-ink">
-                {next.appointment_time}
-                <span className="ml-2 text-base font-normal">{next.customer_name}</span>
-              </p>
-              <p className="mt-0.5 truncate text-xs text-slate7">{next.service}</p>
+              <p className="count-in mt-1 text-2xl font-medium text-ink">{next.appointment_time}</p>
+              <p className="truncate text-sm text-ink">{next.customer_name}</p>
+              <p className="truncate text-xs text-slate7">{next.service}</p>
             </>
           ) : (
             <>
@@ -305,12 +303,12 @@ export function AgendaPanel({
       </div>
 
       <div className="glass rounded-3xl p-5 sm:p-6">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => onDateChange(shiftISO(date, -1))}
-              className="lift glass2 focus-ring grid size-9 place-items-center rounded-full text-ink"
+              className="lift glass2 focus-ring grid size-9 shrink-0 place-items-center rounded-full text-ink"
               aria-label="Dia anterior"
             >
               <ChevronLeft className="size-4" />
@@ -318,13 +316,13 @@ export function AgendaPanel({
             <button
               type="button"
               onClick={() => onDateChange(shiftISO(date, 1))}
-              className="lift glass2 focus-ring grid size-9 place-items-center rounded-full text-ink"
+              className="lift glass2 focus-ring grid size-9 shrink-0 place-items-center rounded-full text-ink"
               aria-label="Próximo dia"
             >
               <ChevronRight className="size-4" />
             </button>
-            <div className="ml-1">
-              <h2 className="text-lg leading-tight font-medium text-ink first-letter:uppercase">
+            <div className="ml-1 min-w-0">
+              <h2 className="truncate text-lg leading-tight font-medium text-ink first-letter:uppercase">
                 {pretty}
               </h2>
               <p className="text-xs text-slate7">
@@ -348,13 +346,13 @@ export function AgendaPanel({
               type="date"
               value={date}
               onChange={(event) => event.target.value && onDateChange(event.target.value)}
-              className="glass2 focus-ring rounded-full px-4 py-1.5 text-xs font-medium text-ink"
+              className="glass2 focus-ring min-w-0 flex-1 rounded-full px-4 py-1.5 text-xs font-medium text-ink sm:flex-none"
               aria-label="Escolher dia"
             />
             <button
               type="button"
               onClick={onRefresh}
-              className="lift glass2 focus-ring grid size-9 place-items-center rounded-full text-ink"
+              className="lift glass2 focus-ring grid size-9 shrink-0 place-items-center rounded-full text-ink"
               aria-label="Atualizar"
               title="Atualizar"
             >
@@ -364,7 +362,7 @@ export function AgendaPanel({
               type="button"
               onClick={() => setDialogOpen(true)}
               disabled={freeSlots.length === 0}
-              className="lift picked focus-ring flex items-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold disabled:opacity-50"
+              className="lift picked focus-ring flex w-full items-center justify-center gap-1.5 rounded-full px-4 py-2 text-xs font-semibold disabled:opacity-50 sm:w-auto"
             >
               <Plus className="size-3.5" strokeWidth={2.5} />
               Agendar cliente
@@ -455,77 +453,85 @@ export function AgendaPanel({
                       const style = STATUS_STYLE[isStatus(row.status) ? row.status : "confirmado"];
                       const cancelled = row.status === "cancelado";
                       const upcoming = next?.id === row.id;
+                      const actions = (
+                        <>
+                          {row.status !== "confirmado" && (
+                            <button
+                              type="button"
+                              onClick={() => onStatusChange(row.id, "confirmado")}
+                              className="lift glass2 focus-ring rounded-lg px-2.5 py-1 text-[11px] font-medium text-ink"
+                            >
+                              Confirmar
+                            </button>
+                          )}
+                          {row.status !== "cancelado" && (
+                            <button
+                              type="button"
+                              onClick={() => onStatusChange(row.id, "cancelado")}
+                              className="lift glass2 focus-ring rounded-lg px-2.5 py-1 text-[11px] font-medium text-slate7"
+                            >
+                              Cancelar
+                            </button>
+                          )}
+                        </>
+                      );
                       return (
                         <div
                           key={row.id}
                           className={cn(
-                            "glass2 relative mb-1.5 flex items-center gap-3 rounded-2xl px-4 py-3 transition-all last:mb-0",
+                            "glass2 relative mb-1.5 rounded-2xl px-4 py-3 transition-all last:mb-0",
                             cancelled && "opacity-60",
                             upcoming && "border-brand/60",
                           )}
                         >
                           <span
                             className={cn(
-                              "absolute -left-[17px] size-3 rounded-full ring-4 ring-white/5 transition-colors",
+                              "absolute top-4 -left-[17px] size-3 rounded-full ring-4 ring-white/5 transition-colors",
                               style.dot,
                             )}
                           />
-                          <div className="w-14 text-xs font-semibold text-ink">
-                            {row.appointment_time}
-                            {upcoming && (
-                              <span className="mt-0.5 block text-[9px] font-semibold tracking-wide text-brand uppercase">
-                                próximo
-                              </span>
-                            )}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p
-                              className={cn(
-                                "truncate text-sm font-medium text-ink",
-                                cancelled && "line-through",
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 shrink-0 text-xs font-semibold text-ink">
+                              {row.appointment_time}
+                              {upcoming && (
+                                <span className="mt-0.5 block text-[9px] font-semibold tracking-wide text-brand uppercase">
+                                  próximo
+                                </span>
                               )}
-                            >
-                              {row.customer_name}
-                            </p>
-                            <p className="truncate text-xs text-slate7">
-                              {row.service} ·{" "}
-                              <a
-                                href={whatsappUrl(row.phone)}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="focus-ring rounded font-medium text-brand hover:underline"
-                                title="Chamar no WhatsApp"
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p
+                                className={cn(
+                                  "truncate text-sm font-medium text-ink",
+                                  cancelled && "line-through",
+                                )}
                               >
-                                {row.phone}
-                              </a>
-                            </p>
+                                {row.customer_name}
+                              </p>
+                              <p className="text-xs text-slate7 sm:truncate">
+                                {row.service} ·{" "}
+                                <a
+                                  href={whatsappUrl(row.phone)}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="focus-ring rounded font-medium whitespace-nowrap text-brand hover:underline"
+                                  title="Chamar no WhatsApp"
+                                >
+                                  {row.phone}
+                                </a>
+                              </p>
+                            </div>
+                            <div className="shrink-0 text-right">
+                              <p className="text-xs text-slate7">
+                                R$ {Number(row.price).toFixed(0)}
+                              </p>
+                              <span className={cn("text-[11px] font-semibold", style.text)}>
+                                {style.label}
+                              </span>
+                            </div>
+                            <div className="ml-1 hidden gap-1 sm:flex">{actions}</div>
                           </div>
-                          <div className="text-right">
-                            <p className="text-xs text-slate7">R$ {Number(row.price).toFixed(0)}</p>
-                            <span className={cn("text-[11px] font-semibold", style.text)}>
-                              {style.label}
-                            </span>
-                          </div>
-                          <div className="ml-1 flex gap-1">
-                            {row.status !== "confirmado" && (
-                              <button
-                                type="button"
-                                onClick={() => onStatusChange(row.id, "confirmado")}
-                                className="lift glass2 focus-ring rounded-lg px-2.5 py-1 text-[11px] font-medium text-ink"
-                              >
-                                Confirmar
-                              </button>
-                            )}
-                            {row.status !== "cancelado" && (
-                              <button
-                                type="button"
-                                onClick={() => onStatusChange(row.id, "cancelado")}
-                                className="lift glass2 focus-ring rounded-lg px-2.5 py-1 text-[11px] font-medium text-slate7"
-                              >
-                                Cancelar
-                              </button>
-                            )}
-                          </div>
+                          <div className="mt-2.5 flex justify-end gap-1.5 sm:hidden">{actions}</div>
                         </div>
                       );
                     })

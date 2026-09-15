@@ -176,16 +176,16 @@ function Landing() {
                 </li>
               ))}
             </ul>
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
               <a
                 href="#planos"
-                className="lift picked focus-ring rounded-full px-9 py-4 text-lg font-medium"
+                className="lift picked focus-ring flex items-center justify-center rounded-full px-9 py-4 text-lg font-medium"
               >
                 Ver planos
               </a>
               <Link
                 to="/agendar"
-                className="lift glass2 focus-ring rounded-full px-7 py-4 text-lg font-medium text-ink"
+                className="lift glass2 focus-ring flex items-center justify-center rounded-full px-7 py-4 text-lg font-medium text-ink"
               >
                 Testar o chat ao vivo
               </Link>
@@ -484,29 +484,29 @@ function Landing() {
           <p className="mx-auto mt-4 max-w-xl text-lg font-light text-ink/80">
             Teste o chat agora com a barbearia de exemplo e imagine ele com o seu nome.
           </p>
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center sm:gap-4">
             <Link
               to="/agendar"
-              className="lift picked focus-ring rounded-full px-9 py-4 text-lg font-medium"
+              className="lift picked focus-ring flex items-center justify-center rounded-full px-9 py-4 text-lg font-medium"
             >
               Testar o chat ao vivo
             </Link>
             <a
               href="#planos"
-              className="lift glass2 focus-ring rounded-full px-7 py-4 text-lg font-medium text-ink"
+              className="lift glass2 focus-ring flex items-center justify-center rounded-full px-7 py-4 text-lg font-medium text-ink"
             >
               Ver planos
             </a>
           </div>
         </section>
 
-        <footer className="flex flex-wrap items-center justify-between gap-4 border-t border-line py-10 text-sm text-slate7">
+        <footer className="flex flex-col gap-4 border-t border-line py-10 text-sm text-slate7 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
           <span className="flex items-center gap-3">
             <BarberPole className="h-6 w-2" />
-            <span className="font-serif text-lg text-ink">Corte na Hora</span>
-            <span>· agendamento por chat para barbearias</span>
+            <span className="font-serif text-lg whitespace-nowrap text-ink">Corte na Hora</span>
+            <span className="hidden sm:inline">· agendamento por chat para barbearias</span>
           </span>
-          <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-4">
             <a
               href={`mailto:${CONTACT.email}`}
               className="focus-ring rounded text-ink hover:underline"
