@@ -4,10 +4,10 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export const SERVICES = [
-  { id: "corte", label: "Corte", price: 45 },
-  { id: "barba", label: "Barba", price: 50 },
-  { id: "corte-barba", label: "Corte + Barba", price: 85 },
-  { id: "sobrancelha", label: "Sobrancelha", price: 25 },
+  { id: "corte", label: "Corte", price: 45, minutes: 40, blurb: "Máquina, tesoura e acabamento" },
+  { id: "barba", label: "Barba", price: 50, minutes: 30, blurb: "Toalha quente e navalha" },
+  { id: "corte-barba", label: "Corte + Barba", price: 85, minutes: 60, blurb: "O combo completo" },
+  { id: "sobrancelha", label: "Sobrancelha", price: 25, minutes: 15, blurb: "Design na navalha" },
 ] as const;
 
 export const TIME_SLOTS = [
@@ -37,6 +37,28 @@ export const getTakenSlots = createServerFn({ method: "GET" })
 
     if (error) throw new Error(error.message);
     return (rows ?? []).map((row) => row.appointment_time);
+  });
+
+const DatesInput = z.object({ dates: z.array(z.string().min(10)).min(1).max(14) });
+
+/*  Taken times for several days at once, keyed by ISO date.  */
+export const getWeekAvailability = createServerFn({ method: "GET" })
+  .inputValidator((data: unknown) => DatesInput.parse(data))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: rows, error } = await supabaseAdmin
+      .from("appointments")
+      .select("appointment_date, appointment_time")
+      .in("appointment_date", data.dates)
+      .neq("status", "cancelado");
+
+    if (error) throw new Error(error.message);
+
+    const taken: Record<string, string[]> = {};
+    for (const row of rows ?? []) {
+      (taken[row.appointment_date] ??= []).push(row.appointment_time);
+    }
+    return taken;
   });
 
 const BookingInput = z.object({

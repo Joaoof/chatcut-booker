@@ -1,7 +1,9 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ArrowRight, Lock, Mail } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+import { BarberPole } from "@/components/BarberPole";
 import { BrandHeader } from "@/components/BrandHeader";
 import { lovable } from "@/integrations/lovable/index";
 import { supabase } from "@/integrations/supabase/client";
@@ -76,57 +78,77 @@ function AuthPage() {
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      <div className="pointer-events-none absolute -top-24 -left-24 size-[420px] rounded-full bg-brand/25 blur-3xl" />
-      <div className="pointer-events-none absolute right-0 bottom-0 size-[460px] rounded-full bg-gold/20 blur-3xl" />
-
-      <div className="relative mx-auto max-w-6xl px-6 py-8">
-        <BrandHeader />
+      <div className="relative mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+        <BrandHeader
+          right={
+            <Link
+              to="/"
+              className="lift glass2 focus-ring rounded-full px-4 py-2 text-xs font-semibold text-ink"
+            >
+              Início
+            </Link>
+          }
+        />
         <div className="mx-auto max-w-md">
-          <div className="glass rounded-3xl p-6">
-            <h2 className="font-display text-lg font-semibold text-ink">
-              {mode === "login" ? "Entrar no painel" : "Criar acesso da equipe"}
-            </h2>
-            <p className="mt-1 text-xs text-slate7">
-              Só a equipe da barbearia vê os agendamentos.
-            </p>
+          <div className="glass chat-in rounded-3xl p-6">
+            <div className="flex items-center gap-4">
+              <BarberPole busy={busy} className="h-12 w-4" />
+              <div>
+                <h2 className="font-display text-lg font-semibold text-ink">
+                  {mode === "login" ? "Entrar no painel" : "Criar acesso da equipe"}
+                </h2>
+                <p className="mt-1 text-xs text-slate7">
+                  Só a equipe da barbearia vê os agendamentos.
+                </p>
+              </div>
+            </div>
 
-            <form onSubmit={submit} className="mt-5 space-y-2">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="E-mail"
-                className="glass2 w-full rounded-xl px-4 py-2.5 text-sm text-ink outline-none placeholder:text-slate7/60"
-              />
-              <input
-                type="password"
-                required
-                minLength={6}
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                placeholder="Senha"
-                className="glass2 w-full rounded-xl px-4 py-2.5 text-sm text-ink outline-none placeholder:text-slate7/60"
-              />
+            <form onSubmit={submit} className="mt-6 space-y-2">
+              <label className="glass2 flex items-center gap-3 rounded-xl px-4 transition-colors focus-within:border-brand">
+                <Mail className="size-4 shrink-0 text-slate7" />
+                <input
+                  type="email"
+                  required
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                  placeholder="E-mail"
+                  autoComplete="email"
+                  className="w-full bg-transparent py-2.5 text-sm text-ink outline-none placeholder:text-slate7/60"
+                />
+              </label>
+              <label className="glass2 flex items-center gap-3 rounded-xl px-4 transition-colors focus-within:border-brand">
+                <Lock className="size-4 shrink-0 text-slate7" />
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  placeholder="Senha"
+                  autoComplete={mode === "login" ? "current-password" : "new-password"}
+                  className="w-full bg-transparent py-2.5 text-sm text-ink outline-none placeholder:text-slate7/60"
+                />
+              </label>
               <button
                 type="submit"
                 disabled={busy}
-                className="lift w-full rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-brand-foreground disabled:opacity-60"
+                className="lift picked focus-ring flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold disabled:opacity-60"
               >
                 {busy ? "Aguarde…" : mode === "login" ? "Entrar" : "Criar conta"}
+                {!busy && <ArrowRight className="size-4" />}
               </button>
             </form>
 
             <button
               onClick={google}
-              className="lift glass2 mt-2 w-full rounded-xl px-4 py-2.5 text-sm font-medium text-ink"
+              className="lift glass2 focus-ring mt-2 w-full rounded-xl px-4 py-2.5 text-sm font-medium text-ink"
             >
               Continuar com Google
             </button>
 
             <button
               onClick={() => setMode(mode === "login" ? "signup" : "login")}
-              className="mt-4 w-full text-xs text-slate7"
+              className="focus-ring mt-4 w-full rounded-lg text-xs text-slate7 transition-colors hover:text-ink"
             >
               {mode === "login" ? "Não tem acesso? Criar conta" : "Já tenho conta. Entrar"}
             </button>

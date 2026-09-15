@@ -1,20 +1,24 @@
 import { Link } from "@tanstack/react-router";
 
-export function BrandHeader({ right }: { right?: React.ReactNode }) {
+import { BarberPole } from "@/components/BarberPole";
+
+/*  Top bar: serif wordmark on the left, page actions on the right.  */
+export function BrandHeader({
+  right,
+  name = "Vulcan Barber",
+}: {
+  right?: React.ReactNode;
+  name?: string;
+}) {
   return (
-    <header className="mb-8 flex items-center justify-between">
-      <Link to="/" className="flex items-center gap-3">
-        <div className="glass2 grid size-11 place-items-center rounded-2xl bg-steel">
-          <span className="font-display text-xl text-brand-foreground">V</span>
-        </div>
-        <div>
-          <h1 className="font-display text-xl font-semibold leading-none text-ink">
-            Vulcan Barber
-          </h1>
-          <p className="mt-1 text-xs text-slate7">Agendamento inteligente</p>
-        </div>
-      </Link>
-      {right}
+    <header className="sticky top-0 z-30 -mx-4 mb-10 border-b border-line bg-background/85 px-4 backdrop-blur-md sm:-mx-6 sm:px-6">
+      <div className="mx-auto flex h-[72px] max-w-6xl items-center justify-between">
+        <Link to="/" className="focus-ring group flex items-center gap-3 rounded-full">
+          <BarberPole className="h-8 w-3 transition-transform duration-300 group-hover:scale-110" />
+          <span className="font-serif text-[22px] leading-none text-ink">{name}</span>
+        </Link>
+        <div className="flex items-center gap-2 sm:gap-4">{right}</div>
+      </div>
     </header>
   );
 }
